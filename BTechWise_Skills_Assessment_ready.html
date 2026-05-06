@@ -204,8 +204,11 @@
   </div>
   <div class="proud-card">
     <div class="section-head"><div class="section-icon">⭐</div><div class="section-title" style="color:var(--navy)">What Do People Often Thank You For?</div></div>
-    <div class="section-hint" style="margin-left:0">And is there a project or situation you feel proud of? Something you organised, fixed, improved, or helped complete. A few sentences is plenty.</div>
-    <textarea id="s7" placeholder="e.g. People often thank me for staying calm under pressure and getting things done. I'm proud of the time I reorganised our team's filing system — it had been a mess for years, but once I set up a simple folder structure, everyone could find things in seconds." rows="6"></textarea>
+    <div class="section-hint" style="margin-left:0">Think about what friends, family, colleagues or customers have praised or relied on you for. What do people say you are good at?</div>
+    <textarea id="s7" placeholder="e.g. People often thank me for staying calm under pressure, being reliable, and always finding a practical solution. Friends come to me when they need something organised or sorted out." rows="4"></textarea>
+    <div class="section-head" style="margin-top:14px"><div class="section-icon">🏆</div><div class="section-title" style="color:var(--navy)">Your Proud Moment</div></div>
+    <div class="section-hint" style="margin-left:0">Is there a project or situation you feel proud of? Something you organised, fixed, improved, or helped complete — at work, at home, or for someone else. A few sentences is plenty.</div>
+    <textarea id="s7b" placeholder="e.g. I'm proud of the time I helped a friend reorganise their small online shop listings and pricing. We simplified the process and improved how products were described. Within a few weeks they noticed more consistent sales." rows="4"></textarea>
   </div>
   <div class="avoid-card">
     <div class="section-head"><div class="section-icon">🚫</div><div class="section-title">Skills or Tasks I Want to Avoid</div></div>
@@ -270,7 +273,8 @@
       {id:"s4",label:"Social & Relationship Skills"},
       {id:"s5",label:"Thinking & Problem-Solving"},
       {id:"s6",label:"Organisation & Practical Skills"},
-      {id:"s7",label:"What People Thank Me For / Proud Moment"},
+      {id:"s7",label:"What People Thank Me For"},
+      {id:"s7b",label:"My Proud Moment"},
       {id:"s8",label:"Skills & Tasks I Want to Avoid"}
     ];
     var hasContent=false;
@@ -333,7 +337,7 @@
     window.open(urls[tool],"_blank");
   }
   function printForm(){
-    var ids=["s1","s2","s3","s4","s5","s6","s7","s8"];
+    var ids=["s1","s2","s3","s4","s5","s6","s7","s7b","s8"];
     var hasContent=ids.some(function(id){return document.getElementById(id).value.trim()!==""});
     if(!hasContent){alert("Please fill in at least one section before printing!");return;}
     window.print();
@@ -342,7 +346,7 @@
     if(!confirm("Clear all your answers and start again?"))return;
     ["a1","a2","a3","a4","a5","a7","a8"].forEach(function(id){document.getElementById(id).value="";});
     ["a6","a9"].forEach(function(id){document.getElementById(id).selectedIndex=0;});
-    ["s1","s2","s3","s4","s5","s6","s7","s8"].forEach(function(id){document.getElementById(id).value="";});
+    ["s1","s2","s3","s4","s5","s6","s7","s7b","s8"].forEach(function(id){document.getElementById(id).value="";});
     document.getElementById("summary-output").value="";
     document.getElementById("copy-success").style.display="none";
     window.scrollTo({top:0,behavior:"smooth"});
