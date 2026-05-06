@@ -104,7 +104,59 @@
     <br>
     <p>List as many skills as you like in each section — there is no limit. <strong>The more real your examples, the better your AI suggestions will be.</strong></p>
   </div>
-  <div class="score-guide">
+  <div class="section-card" style="border-top-color:#0ea5e9;margin-bottom:20px;">
+    <div class="section-head"><div class="section-icon">🙋</div><div class="section-title">About You — Complete This Section First</div></div>
+    <div class="section-hint" style="margin-left:33px;">This section gives any advisor reading your questionnaire the full context they need to make genuinely relevant suggestions. Please fill in every field as honestly as you can.</div>
+    <div style="display:grid;gap:10px;margin-top:10px;">
+      <div style="display:grid;grid-template-columns:190px 1fr;gap:8px;align-items:center;">
+        <label style="font-weight:700;font-size:14px;color:var(--navy);">Age</label>
+        <input type="text" id="a1" placeholder="e.g. 34" style="border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Lato',sans-serif;font-size:14px;color:var(--text);background:#fafcff;outline:none;">
+      </div>
+      <div style="display:grid;grid-template-columns:190px 1fr;gap:8px;align-items:center;">
+        <label style="font-weight:700;font-size:14px;color:var(--navy);">Current Status</label>
+        <input type="text" id="a2" placeholder="e.g. Stay-at-home parent, employed, student, unemployed..." style="border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Lato',sans-serif;font-size:14px;color:var(--text);background:#fafcff;outline:none;">
+      </div>
+      <div style="display:grid;grid-template-columns:190px 1fr;gap:8px;align-items:center;">
+        <label style="font-weight:700;font-size:14px;color:var(--navy);">Household Background</label>
+        <input type="text" id="a3" placeholder="Brief description of your home situation" style="border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Lato',sans-serif;font-size:14px;color:var(--text);background:#fafcff;outline:none;">
+      </div>
+      <div style="display:grid;grid-template-columns:190px 1fr;gap:8px;align-items:center;">
+        <label style="font-weight:700;font-size:14px;color:var(--navy);">Work Background</label>
+        <input type="text" id="a4" placeholder="Your most recent or most relevant role(s)" style="border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Lato',sans-serif;font-size:14px;color:var(--text);background:#fafcff;outline:none;">
+      </div>
+      <div style="display:grid;grid-template-columns:190px 1fr;gap:8px;align-items:center;">
+        <label style="font-weight:700;font-size:14px;color:var(--navy);">Interests &amp; Hobbies</label>
+        <input type="text" id="a5" placeholder="What do you genuinely enjoy doing in your spare time?" style="border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Lato',sans-serif;font-size:14px;color:var(--text);background:#fafcff;outline:none;">
+      </div>
+      <div style="display:grid;grid-template-columns:190px 1fr;gap:8px;align-items:center;">
+        <label style="font-weight:700;font-size:14px;color:var(--navy);">Confidence with Technology</label>
+        <select id="a6" style="border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Lato',sans-serif;font-size:14px;color:var(--text);background:#fafcff;outline:none;">
+          <option value="">Select one...</option>
+          <option>Low — I use basics like email and browsing</option>
+          <option>Moderate — I'm comfortable with apps and tools</option>
+          <option>High — I pick up new digital tools easily</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:190px 1fr;gap:8px;align-items:center;">
+        <label style="font-weight:700;font-size:14px;color:var(--navy);">Business Ideas Already Considered</label>
+        <input type="text" id="a7" placeholder="Any ideas you've already thought about or researched" style="border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Lato',sans-serif;font-size:14px;color:var(--text);background:#fafcff;outline:none;">
+      </div>
+      <div style="display:grid;grid-template-columns:190px 1fr;gap:8px;align-items:center;">
+        <label style="font-weight:700;font-size:14px;color:var(--navy);">Hours Available Per Week</label>
+        <input type="text" id="a8" placeholder="Roughly how many hours could you give to a new venture?" style="border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Lato',sans-serif;font-size:14px;color:var(--text);background:#fafcff;outline:none;">
+      </div>
+      <div style="display:grid;grid-template-columns:190px 1fr;gap:8px;align-items:center;">
+        <label style="font-weight:700;font-size:14px;color:var(--navy);">Income Goal</label>
+        <select id="a9" style="border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Lato',sans-serif;font-size:14px;color:var(--text);background:#fafcff;outline:none;">
+          <option value="">Select one...</option>
+          <option>Supplementary income — a bit extra on the side</option>
+          <option>Replace full income — this needs to be my main income</option>
+          <option>Unsure — I'm still figuring out what I need</option>
+        </select>
+      </div>
+    </div>
+  </div>
+    <div class="score-guide">
     <h3>🎯 Confidence Score Guide</h3>
     <div class="score-row"><span class="badge b5">5</span> I enjoy this and feel confident doing it</div>
     <div class="score-row"><span class="badge b4">4</span> I'm comfortable and capable</div>
@@ -200,6 +252,17 @@
 </div>
 <script>
   function buildPrompt(){
+    var aboutFields=[
+      {id:"a1",label:"Age"},
+      {id:"a2",label:"Current Status"},
+      {id:"a3",label:"Household Background"},
+      {id:"a4",label:"Work Background"},
+      {id:"a5",label:"Interests & Hobbies"},
+      {id:"a6",label:"Confidence with Technology"},
+      {id:"a7",label:"Business Ideas Already Considered"},
+      {id:"a8",label:"Hours Available Per Week"},
+      {id:"a9",label:"Income Goal"}
+    ];
     var sections=[
       {id:"s1",label:"Leadership & Management"},
       {id:"s2",label:"Communication"},
@@ -215,6 +278,13 @@
     prompt+="=======================================================\n";
     prompt+="MY EXPERIENCE & STRENGTH REVIEW — BTechWise Toolkit\n";
     prompt+="=======================================================\n\n";
+    prompt+="📌 About Me\n";
+    aboutFields.forEach(function(f){
+      var el=document.getElementById(f.id);
+      var val=el.value.trim();
+      if(val){hasContent=true;prompt+=f.label+": "+val+"\n";}
+    });
+    prompt+="\n";
     sections.forEach(function(s){
       var val=document.getElementById(s.id).value.trim();
       if(val){hasContent=true;prompt+="📌 "+s.label+"\n"+val+"\n\n";}
@@ -270,6 +340,8 @@
   }
   function clearForm(){
     if(!confirm("Clear all your answers and start again?"))return;
+    ["a1","a2","a3","a4","a5","a7","a8"].forEach(function(id){document.getElementById(id).value="";});
+    ["a6","a9"].forEach(function(id){document.getElementById(id).selectedIndex=0;});
     ["s1","s2","s3","s4","s5","s6","s7","s8"].forEach(function(id){document.getElementById(id).value="";});
     document.getElementById("summary-output").value="";
     document.getElementById("copy-success").style.display="none";
