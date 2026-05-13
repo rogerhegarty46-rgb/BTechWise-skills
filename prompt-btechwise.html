@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt — Your BTechWise Skills Memory Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #FAF8F3;
+    --warm-white: #FFFFFF;
+    --ink: #1C1A16;
+    --ink-soft: #4A4640;
+    --ink-muted: #8A8680;
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --teal-mid: #1D9E75;
+    --border: rgba(28,26,22,0.12);
+    --border-soft: rgba(28,26,22,0.07);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+  .app { min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 0 1rem 2rem; }
+
+  /* HEADER */
+  .site-header { width: 100%; max-width: 680px; display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 0 1.25rem; border-bottom: 0.5px solid var(--border); margin-bottom: 2rem; }
+  .logo { font-family: 'Lora', serif; font-size: 15px; font-weight: 400; color: var(--ink-soft); letter-spacing: 0.02em; }
+  .logo strong { color: var(--ink); font-weight: 500; }
+  .badge { font-size: 11px; font-weight: 500; color: var(--teal); background: var(--teal-light); padding: 4px 10px; border-radius: 20px; letter-spacing: 0.03em; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* KEY SCREEN */
+  #keyScreen { width: 100%; max-width: 500px; animation: fadeUp 0.4s ease both; }
+  .key-card { background: var(--warm-white); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.75rem 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .key-title { font-family: 'Lora', serif; font-size: 19px; font-weight: 500; color: var(--ink); }
+  .key-desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.65; }
+  .key-desc a { color: var(--teal); text-decoration: none; }
+  .key-desc a:hover { text-decoration: underline; }
+  .key-label { font-size: 11px; font-weight: 500; color: var(--ink-muted); margin-bottom: 5px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .key-field { width: 100%; padding: 10px 13px; border: 0.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); background: var(--cream); outline: none; letter-spacing: 0.03em; }
+  .key-field:focus { border-color: var(--teal-mid); }
+  .key-note { font-size: 12px; color: var(--ink-muted); line-height: 1.65; padding: 0.75rem 1rem; background: var(--cream); border-radius: var(--radius-sm); border: 0.5px solid var(--border-soft); }
+  .key-error { font-size: 13px; color: #A32D2D; display: none; padding: 0.5rem 0; }
+
+  /* INTRO SCREEN */
+  #introScreen { width: 100%; max-width: 600px; animation: fadeUp 0.5s ease both; display: none; }
+  .intro-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--teal-light); border: 1.5px solid rgba(15,110,86,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
+  .intro-avatar svg { width: 26px; height: 26px; }
+  .intro-eyebrow { font-size: 12px; font-weight: 500; color: var(--teal); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .intro-title { font-family: 'Lora', serif; font-size: 26px; font-weight: 500; line-height: 1.35; color: var(--ink); margin-bottom: 0.75rem; }
+  .intro-lead { font-size: 15px; line-height: 1.75; color: var(--ink-soft); margin-bottom: 1.75rem; }
+  .checklist { background: var(--warm-white); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; margin-bottom: 1.25rem; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
+  .check-icon { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; color: var(--teal-mid); }
+  .nudge { border-left: 3px solid var(--teal-mid); padding: 0.9rem 1.1rem; background: var(--warm-white); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin-bottom: 1.75rem; }
+  .nudge-label { font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.4rem; }
+  .nudge p { font-size: 13.5px; line-height: 1.7; color: var(--ink-soft); }
+  .nudge p strong { color: var(--ink); font-weight: 500; }
+
+  /* SHARED BUTTON */
+  .primary-btn { width: 100%; padding: 14px; background: var(--ink); color: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; border: none; border-radius: var(--radius); cursor: pointer; transition: background 0.15s, transform 0.1s; letter-spacing: 0.01em; }
+  .primary-btn:hover { background: #2C2A24; }
+  .primary-btn:active { transform: scale(0.99); }
+  .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* CHAT SCREEN */
+  #chatScreen { display: none; width: 100%; max-width: 680px; flex-direction: column; height: calc(100vh - 110px); background: var(--warm-white); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; animation: fadeUp 0.35s ease both; }
+  .chat-header { padding: 14px 1.25rem; border-bottom: 0.5px solid var(--border-soft); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .chat-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--teal-light); border: 1px solid rgba(15,110,86,0.2); display: flex; align-items: center; justify-content: center; font-family: 'Lora', serif; font-size: 15px; color: var(--teal); flex-shrink: 0; }
+  .chat-header-info .name { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+  .chat-header-info .tagline { font-size: 12px; color: var(--ink-muted); }
+  .online-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal-mid); margin-left: auto; flex-shrink: 0; }
+  .msgs { flex: 1; overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+  .msgs::-webkit-scrollbar { width: 4px; }
+  .msgs::-webkit-scrollbar-track { background: transparent; }
+  .msgs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .bubble { max-width: 82%; padding: 11px 15px; border-radius: 18px; font-size: 14.5px; line-height: 1.6; }
+  .bubble.prompt { background: var(--cream); color: var(--ink); align-self: flex-start; border-bottom-left-radius: 4px; border: 0.5px solid var(--border-soft); }
+  .bubble.user { background: var(--ink); color: var(--cream); align-self: flex-end; border-bottom-right-radius: 4px; }
+  .typing { display: flex; align-items: center; gap: 5px; padding: 13px 16px; background: var(--cream); border: 0.5px solid var(--border-soft); border-radius: 18px; border-bottom-left-radius: 4px; align-self: flex-start; }
+  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-muted); animation: blink 1.3s infinite; }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100% { opacity:0.2; } 40% { opacity:1; } }
+  .summary-row { padding: 8px 1.25rem 0; }
+  .summary-btn { width: 100%; padding: 9px; background: transparent; color: var(--teal); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; border: 0.5px solid rgba(15,110,86,0.3); border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s; }
+  .summary-btn:hover { background: var(--teal-light); }
+  .input-row { display: flex; gap: 8px; padding: 12px 1.25rem; border-top: 0.5px solid var(--border-soft); flex-shrink: 0; }
+  .input-row input { flex: 1; padding: 10px 14px; background: var(--cream); border: 0.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); outline: none; transition: border-color 0.15s; }
+  .input-row input:focus { border-color: var(--teal-mid); }
+  .input-row input::placeholder { color: var(--ink-muted); }
+  .input-row button { padding: 10px 18px; background: var(--ink); color: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; border: none; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s, transform 0.1s; white-space: nowrap; }
+  .input-row button:hover { background: #2C2A24; }
+  .input-row button:active { transform: scale(0.98); }
+  .input-row button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  .site-footer { width: 100%; max-width: 680px; text-align: center; padding: 1.25rem 0 0; font-size: 12px; color: var(--ink-muted); }
+
+  @media (max-width: 600px) {
+    .intro-title { font-size: 22px; }
+    #chatScreen { height: calc(100vh - 100px); }
+    .bubble { max-width: 92%; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="site-header">
+    <div class="logo"><strong>BTech</strong>Wise</div>
+    <div class="badge">Skills Memory Guide</div>
+  </header>
+
+  <!-- STEP 1: API KEY ENTRY -->
+  <div id="keyScreen">
+    <div class="key-card">
+      <p class="key-title">One quick setup step</p>
+      <p class="key-desc">
+        Prompt is powered by Claude AI. To use it, you need a free Anthropic API key.
+        <a href="https://console.anthropic.com/account/keys" target="_blank">Get yours at console.anthropic.com &rarr;</a>
+        <br><br>
+        Your key is only stored in this browser tab and never sent anywhere except directly to Anthropic.
+      </p>
+      <div>
+        <p class="key-label">Your Anthropic API key</p>
+        <input class="key-field" type="password" id="keyInput" placeholder="sk-ant-..." autocomplete="off" spellcheck="false" />
+      </div>
+      <p class="key-error" id="keyError"></p>
+      <div class="key-note">
+        <strong>Privacy note:</strong> Your key is held only in memory for this session. It disappears when you close the tab. Your conversation is never stored or logged by BTechWise.
+      </div>
+      <button class="primary-btn" id="keyBtn">Continue &rarr;</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: WELCOME / INTRO -->
+  <div id="introScreen">
+    <div class="intro-avatar">
+      <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="13" cy="9" r="4.5" stroke="#0F6E56" stroke-width="1.5"/>
+        <path d="M4 22c0-4.418 4.03-8 9-8s9 3.582 9 8" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <p class="intro-eyebrow">Meet Prompt</p>
+    <h1 class="intro-title">Your personal skills memory guide</h1>
+    <p class="intro-lead">Prompt is going to take you on a gentle journey through your past — asking questions about things you've done, helped with, organised, or achieved across different areas of your life. The goal is simply to help you remember experiences that reveal real skills, many of which you may not even realise you have.</p>
+    <ul class="checklist">
+      <li>
+        <svg class="check-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        There are no right or wrong answers — just talk naturally
+      </li>
+      <li>
+        <svg class="check-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Nothing is too small or too ordinary to mention
+      </li>
+      <li>
+        <svg class="check-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        No formal language needed — just say it as it comes
+      </li>
+      <li>
+        <svg class="check-icon" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M6.5 10l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        At the end, Prompt gives you a full summary ready for your Skills Assessment
+      </li>
+    </ul>
+    <div class="nudge">
+      <p class="nudge-label">A gentle reminder</p>
+      <p>Think broadly as you go. Skills come in all shapes — including things people often overlook. <strong>Things like using Word, Excel, or spreadsheets regularly. Managing a household budget, club finances, or charity accounts. Using apps, email, video calls, social media, or online tools day to day. Helping someone else with their phone or computer.</strong> These are all real, valuable skills. If it crosses your mind, mention it — no experience is too everyday to count.</p>
+    </div>
+    <button class="primary-btn" id="startBtn">Begin my skills journey &rarr;</button>
+  </div>
+
+  <!-- STEP 3: CHAT -->
+  <div id="chatScreen">
+    <div class="chat-header">
+      <div class="chat-avatar">P</div>
+      <div class="chat-header-info">
+        <p class="name">Prompt</p>
+        <p class="tagline">BTechWise memory guide</p>
+      </div>
+      <div class="online-dot" title="Ready"></div>
+    </div>
+    <div class="msgs" id="msgs"></div>
+    <div class="summary-row">
+      <button class="summary-btn" id="summaryBtn" style="display:none">Generate my skills summary &darr;</button>
+    </div>
+    <div class="input-row">
+      <input type="text" id="userInput" placeholder="Type your reply here…" autocomplete="off" />
+      <button id="sendBtn">Send &rarr;</button>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>Powered by BTechWise &nbsp;&middot;&nbsp; Your responses are private and not stored</p>
+  </footer>
+
+</div>
+<script>
+const SYSTEM = `You are Prompt, a warm encouraging life experience coach for BTechWise newsletter readers. You help people remember and articulate real skills from their life experiences.
+
+Tone: warm, jargon-free, encouraging, conversational — like a trusted friend over tea. Never clinical or rushed. Every experience matters.
+
+Work through ONE area at a time. Ask ONE question at a time. Wait for their response before moving forward. After each response, briefly reflect the skill you can see in what they shared (1 sentence), then ask the next question or transition warmly to the next section.
+
+The 8 sections to work through in order:
+1. Family & Home Life
+2. Friends & Community
+3. Clubs, Groups & Social Activities
+4. Sport, Fitness & Outdoor Activities
+5. Hobbies & Creative Pursuits
+6. Work & Career
+7. Projects & Achievements
+8. Technology & Digital Skills
+
+For Section 8 (Technology), use this question wording: "What technology do you use day to day — things like a smartphone, computer, tablet, video calls, email, or social media? And have you ever used any software or apps for work or home — things like Word, Excel, spreadsheets, design tools, Photoshop, or anything else you had to learn how to use?"
+
+Important rules:
+- Ask ONE question at a time. Keep your responses to 3-4 sentences maximum.
+- After each user response, briefly name the skill you can see before moving on.
+- If someone says they haven't done something, gently probe: "Even something small counts — did you ever help someone out, even just once?"
+- Never assess or judge. Your role is purely to help them remember and articulate.
+- When you have 2-3 good examples from a section, transition warmly to the next.
+- If asked to generate the SKILLS SUMMARY, produce it clearly under these headings: About You, Leadership & Organisation, Communication, Reliability & Personal Strengths, Social & Relationship Skills, Thinking & Problem-Solving, Practical & Organisational Skills, Things You're Proud Of, Skills or Experiences to Explore Further.`;
+
+let history = [];
+let responding = false;
+let msgCount = 0;
+
+const msgsEl = document.getElementById("msgs");
+const inputEl = document.getElementById("userInput");
+const sendBtn = document.getElementById("sendBtn");
+const summaryBtn = document.getElementById("summaryBtn");
+
+function scrollBottom() { msgsEl.scrollTop = msgsEl.scrollHeight; }
+
+function addBubble(text, who) {
+  const d = document.createElement("div");
+  d.className = "bubble " + who;
+  d.innerHTML = text.replace(/\n/g, "<br>");
+  msgsEl.appendChild(d);
+  scrollBottom();
+}
+
+function showTyping() {
+  const d = document.createElement("div");
+  d.className = "typing"; d.id = "typing";
+  d.innerHTML = "<span></span><span></span><span></span>";
+  msgsEl.appendChild(d); scrollBottom();
+}
+
+function removeTyping() { const t = document.getElementById("typing"); if (t) t.remove(); }
+
+async function callClaude(messages) {
+  const key = sessionStorage.getItem("btw_key");
+  const resp = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": key,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-allow-browser": "true"
+    },
+    body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, system: SYSTEM, messages })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(err?.error?.message || "HTTP " + resp.status);
+  }
+  const data = await resp.json();
+  return data.content.map(b => b.text || "").join("");
+}
+
+async function send(userText) {
+  if (responding) return;
+  responding = true;
+  sendBtn.disabled = true;
+
+  if (userText) {
+    addBubble(userText, "user");
+    history.push({ role: "user", content: userText });
+    msgCount++;
+    if (msgCount > 18) summaryBtn.style.display = "block";
+  }
+
+  showTyping();
+  try {
+    const msgs = userText
+      ? history
+      : [...history, { role: "user", content: "Please now generate my complete skills summary, formatted clearly with all the headings." }];
+    const reply = await callClaude(msgs);
+    removeTyping();
+    addBubble(reply, "prompt");
+    history.push({ role: "assistant", content: reply });
+  } catch(e) {
+    removeTyping();
+    addBubble("Sorry, something went wrong — " + (e.message || "please try again in a moment."), "prompt");
+  }
+
+  responding = false;
+  sendBtn.disabled = false;
+  inputEl.focus();
+}
+
+/* KEY SCREEN */
+document.getElementById("keyBtn").addEventListener("click", async () => {
+  const key = document.getElementById("keyInput").value.trim();
+  const errEl = document.getElementById("keyError");
+  errEl.style.display = "none";
+
+  if (!key.startsWith("sk-ant-")) {
+    errEl.textContent = "That doesn't look like a valid API key — it should start with sk-ant-";
+    errEl.style.display = "block";
+    return;
+  }
+
+  document.getElementById("keyBtn").disabled = true;
+  document.getElementById("keyBtn").textContent = "Checking…";
+
+  try {
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01", "anthropic-dangerous-allow-browser": "true" },
+      body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 10, messages: [{ role: "user", content: "hi" }] })
+    });
+    if (resp.status === 401) throw new Error("Invalid API key — please check and try again.");
+    if (!resp.ok && resp.status !== 200) throw new Error("HTTP " + resp.status + " — please try again.");
+    sessionStorage.setItem("btw_key", key);
+    document.getElementById("keyScreen").style.display = "none";
+    document.getElementById("introScreen").style.display = "block";
+  } catch(e) {
+    errEl.textContent = e.message || "Could not verify the key — please check it and try again.";
+    errEl.style.display = "block";
+    document.getElementById("keyBtn").disabled = false;
+    document.getElementById("keyBtn").textContent = "Continue →";
+  }
+});
+
+document.getElementById("keyInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("keyBtn").click();
+});
+
+/* INTRO → CHAT */
+document.getElementById("startBtn").addEventListener("click", async () => {
+  document.getElementById("introScreen").style.display = "none";
+  const cs = document.getElementById("chatScreen");
+  cs.style.display = "flex";
+  responding = true;
+  showTyping();
+  try {
+    const opening = await callClaude([{ role: "user", content: "Please greet me warmly as Prompt — my BTechWise memory guide. Introduce yourself in 2-3 sentences, then ask me what stage of life I'm at (retired, semi-retired, working, or something else) before we begin." }]);
+    removeTyping();
+    addBubble(opening, "prompt");
+    history.push({ role: "assistant", content: opening });
+  } catch(e) {
+    removeTyping();
+    addBubble("Hello! I'm so glad you're here. I'm Prompt — your personal BTechWise memory guide. Before we begin our journey together, could you tell me roughly what stage of life you're at? For example, are you retired, semi-retired, working, or something else? There's absolutely no rush — just take your time.", "prompt");
+  }
+  responding = false;
+  inputEl.focus();
+});
+
+summaryBtn.addEventListener("click", () => { summaryBtn.style.display = "none"; send(null); });
+sendBtn.addEventListener("click", () => { const t = inputEl.value.trim(); if (!t || responding) return; inputEl.value = ""; send(t); });
+inputEl.addEventListener("keydown", e => { if (e.key === "Enter") sendBtn.click(); });
+</script>
+</body>
+</html>
