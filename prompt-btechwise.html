@@ -260,7 +260,7 @@ async function callClaude(messages) {
   const resp = await fetch("https://btechwise-prompt.roger-hegarty46.workers.dev", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, system: SYSTEM, messages })
+    body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 1000, system: SYSTEM, messages })
   });
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({}));
