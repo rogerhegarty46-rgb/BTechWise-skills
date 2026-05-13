@@ -222,6 +222,8 @@ For Section 8 (Technology), use this question wording: "What technology do you u
 
 Important rules:
 - Ask ONE question at a time. Keep your responses to 3-4 sentences maximum.
+- Never use markdown formatting like **bold** or *italics* — plain text only.
+- Never use emojis.
 - After each user response, briefly name the skill you can see before moving on.
 - If someone says they haven't done something, gently probe: "Even something small counts — did you ever help someone out, even just once?"
 - Never assess or judge. Your role is purely to help them remember and articulate.
@@ -242,7 +244,12 @@ function scrollBottom() { msgsEl.scrollTop = msgsEl.scrollHeight; }
 function addBubble(text, who) {
   const d = document.createElement("div");
   d.className = "bubble " + who;
-  d.innerHTML = text.replace(/\n/g, "<br>");
+  // Convert markdown bold to HTML and strip emoji
+  let html = text
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, "")
+    .replace(/\n/g, "<br>");
+  d.innerHTML = html;
   msgsEl.appendChild(d);
   scrollBottom();
 }
@@ -260,7 +267,7 @@ async function callClaude(messages) {
   const resp = await fetch("https://btechwise-prompt.roger-hegarty46.workers.dev", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 1000, system: SYSTEM, messages })
+    body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 1000, system: SYSTEM, messages })
   });
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({}));
@@ -320,7 +327,7 @@ document.getElementById("keyBtn").addEventListener("click", async () => {
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01", "anthropic-dangerous-allow-browser": "true" },
-      body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 10, messages: [{ role: "user", content: "hi" }] })
+      body: JSON.stringify({ model: "claude-sonnet-4-5", max_tokens: 10, messages: [{ role: "user", content: "hi" }] })
     });
     if (resp.status === 401) throw new Error("Invalid API key — please check and try again.");
     if (!resp.ok && resp.status !== 200) throw new Error("HTTP " + resp.status + " — please try again.");
