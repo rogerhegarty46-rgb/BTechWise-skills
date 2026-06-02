@@ -319,6 +319,9 @@
   }
   .footer-note b { color: var(--navy); }
 
+  /* Print-only expanded skill text (hidden on screen) */
+  .skill-print { display: none; }
+
   /* ===== Print ===== */
   @media print {
     body { background: #fff; padding: 0; }
@@ -326,11 +329,23 @@
     .toolbar { display: none; }
     .keep-box { display: none; }
     .content { padding: 14px 18px; }
-    textarea.skill-input, select.score-input, .meta-field input {
+    select.score-input, .meta-field input {
       background: #fff;
       box-shadow: none;
     }
-    textarea.skill-input { border-color: #999; }
+    /* Hide the fixed-height input boxes; show full text instead */
+    textarea.skill-input { display: none; }
+    .skill-print {
+      display: block;
+      min-height: 40px;
+      border: 1px solid #999;
+      border-radius: 6px;
+      padding: 7px 8px;
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      color: #1c2733;
+    }
     tbody tr { break-inside: avoid; }
     .rating-grid { break-inside: avoid; }
     h1.heading { font-size: 32px; }
@@ -457,7 +472,7 @@
           </div>
         </td>
         <td class="prompts">${r.prompts}</td>
-        <td><textarea class="skill-input" id="skill_${i}" placeholder="Write your skills / experiences here..."></textarea></td>
+        <td><textarea class="skill-input" id="skill_${i}" placeholder="Write your skills / experiences here..."></textarea><div class="skill-print" id="skillprint_${i}"></div></td>
         <td class="score-cell">
           <select class="score-input" id="score_${i}">
             <option value=""></option>
@@ -471,6 +486,16 @@
       </tr>`).join('');
   }
   buildTable();
+
+  // Before printing / Save-as-PDF, copy each typed entry into its
+  // print companion so long entries expand fully instead of being clipped.
+  window.addEventListener('beforeprint', function () {
+    ROWS.forEach((r, i) => {
+      const ta = document.getElementById('skill_' + i);
+      const pr = document.getElementById('skillprint_' + i);
+      if (ta && pr) pr.textContent = ta.value;
+    });
+  });
 
   function collect() {
     const data = { name: document.getElementById('m_name').value,
