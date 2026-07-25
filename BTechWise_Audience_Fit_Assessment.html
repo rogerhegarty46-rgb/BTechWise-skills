@@ -60,6 +60,7 @@
   .btn-yellow{background:var(--yellow);color:var(--navy);box-shadow:0 3px 10px rgba(200,212,0,.28);font-weight:900;}
   .btn-light{background:#e8edf8;color:var(--navy);box-shadow:0 2px 6px rgba(0,0,0,.08);}
   .btn-open{background:var(--blue);color:#fff;box-shadow:0 3px 10px rgba(0,38,207,.25);}
+  .btn-green{background:#16a34a;color:#fff;box-shadow:0 3px 10px rgba(22,163,74,.28);}
   .summary-label{font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;color:var(--navy);margin-bottom:8px;}
   #summary-output{width:100%;min-height:220px;border:1.5px solid var(--border);border-radius:8px;padding:13px 14px;font-family:'Lato',sans-serif;font-size:13.5px;line-height:1.65;color:var(--text);background:#fafcff;resize:vertical;outline:none;}
   #summary-output:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,38,207,.10);}
@@ -175,7 +176,13 @@
   .counter-pill.excites{background:#dcfce7;color:#166534;}
   .counter-pill.maybe{background:#fef9c3;color:#854d0e;}
   .reaction-grid{display:grid;grid-template-columns:1fr;gap:10px;}
-  .reaction-card{border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;transition:border-color .15s,background .15s;}
+  .reaction-card{border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;transition:border-color .15s,background .15s;}
+  .rc-read-row{flex-basis:100%;display:flex;align-items:center;flex-wrap:wrap;gap:16px;padding-top:4px;}
+  .rc-read-toggle{background:none;border:none;color:var(--blue);font-family:'Nunito',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;padding:0;text-align:left;}
+  .rc-read-toggle:hover{text-decoration:underline;}
+  .rc-print-btn{background:none;border:none;color:var(--muted);font-family:'Nunito',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;padding:0;text-align:left;}
+  .rc-print-btn:hover{text-decoration:underline;color:var(--navy);}
+  .rc-read-body{flex-basis:100%;white-space:pre-wrap;font-size:12.5px;color:var(--text);line-height:1.6;background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-top:2px;max-height:340px;overflow-y:auto;}
   .reaction-card.is-excites{border-color:#16a34a;background:#f4fdf7;}
   .reaction-card.is-maybe{border-color:#d97706;background:#fffdf4;}
   .reaction-card .rc-icon{font-size:22px;flex-shrink:0;}
@@ -237,6 +244,17 @@
   @media print{
     .selection-section,.explore-more-box,.selection-summary,.btn-edit-selection{display:none!important;}
   }
+  .pdf-print-only{display:none;}
+  #pdf-print-content{white-space:pre-wrap;font-family:'Lato',sans-serif;font-size:13px;line-height:1.65;color:#111;}
+  .pdf-print-header h1{font-family:'Nunito',sans-serif;font-weight:900;color:var(--navy);font-size:22px;margin-bottom:2px;}
+  .pdf-print-header p{font-size:12px;color:#666;margin-bottom:22px;}
+  @media print{
+    body.printing-audience-pdf .header,
+    body.printing-audience-pdf .sticky-nav,
+    body.printing-audience-pdf .footer,
+    body.printing-audience-pdf .main > *:not(.pdf-print-only){display:none!important;}
+    body.printing-audience-pdf .pdf-print-only{display:block!important;}
+  }
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
@@ -258,22 +276,22 @@
 
 <div class="main">
   <div class="intro-card">
-    <p><strong>You've read the 10 BTechWise Audience Guides.</strong> Rather than scoring all 100 questions in one go, start by reacting to each guide &mdash; then you'll score just your top 3 in detail.</p>
+    <p><strong>You've read the 10 BTechWise Audience Guides.</strong> Rather than scoring all 100 questions in one go, start by reacting to each guide &mdash; then you'll score just your favourites in detail.</p>
     <br>
-    <p>For each guide below, choose <strong>&#128994; Strong Interest</strong> for your favourites (pick exactly 3), or <strong>&#128993; Worth Exploring</strong> for ones you're curious about but not sure on. Leave the rest unmarked.</p>
+    <p>For each guide below, choose <strong>&#128994; Strong Interest</strong> for your favourites (pick 1 to 3), or <strong>&#128993; Worth Exploring</strong> for ones you're curious about but not sure on. Leave the rest unmarked.</p>
   </div>
 
   <div class="selection-section" id="selection-section">
     <h2>&#128064; Step 1: React To Each Guide</h2>
-    <p class="sub">Choose your top <strong>3 guides</strong> that excite you most. You can also mark a few as Worth Exploring to look at later.</p>
+    <p class="sub">Choose <strong>1 to 3 guides</strong> that excite you most. You can also mark a few as Worth Exploring to look at later.</p>
     <div class="selection-counter">
       <div class="counter-pill excites" id="excites-counter">&#128994; Strong Interest: 0/3</div>
       <div class="counter-pill maybe" id="maybe-counter">&#128993; Worth Exploring: 0 marked</div>
     </div>
     <div class="reaction-grid" id="reaction-grid"></div>
     <div class="continue-wrap">
-      <button class="btn btn-primary" id="continue-btn" onclick="continueToScoring()" disabled>Continue to My 3 Guides</button>
-      <div class="continue-hint" id="continue-hint">Pick exactly 3 guides marked &#128994; Strong Interest to continue.</div>
+      <button class="btn btn-primary" id="continue-btn" onclick="continueToScoring()" disabled>Continue to My Guides</button>
+      <div class="continue-hint" id="continue-hint">Pick at least 1 guide marked &#128994; Strong Interest to continue (up to 3).</div>
     </div>
   </div>
 
@@ -284,7 +302,7 @@
 
   <div id="scoring-heading" class="hidden-block">
     <div class="scoring-section-title">&#9997;&#65039; Step 2: Score Your Guides</div>
-    <div class="scoring-section-sub">For each guide below: attach the official Guide PDF (or paste its text) for richer AI suggestions, score all 10 questions from 1&ndash;10, and tick any reflection statements that resonate &mdash; these add a small Affinity Bonus but don't affect your main score.</div>
+    <div class="scoring-section-sub">Each guide's full content is already built into the tool, so the AI automatically gets the richer detail &mdash; just score all 10 questions from 1&ndash;10 for each guide below, and tick any reflection statements that resonate. These add a small Affinity Bonus but don't affect your main score.</div>
   </div>
 
   <div class="score-guide hidden-block" id="score-guide-block">
@@ -302,7 +320,7 @@
 
   <div class="results-section hidden-block" id="results-section">
     <h2>&#128202; My Results</h2>
-    <p class="sub">Your scores update automatically as you answer questions above.</p>
+    <p class="sub">Your scores update automatically as you answer questions above. Once you're happy with your summary, save it as a PDF to keep a copy of your report.</p>
     <div id="top-match-holder"></div>
     <div id="rankings-holder"></div>
 
@@ -319,6 +337,7 @@
     <div class="btn-row" style="margin-top:18px;">
       <button class="btn btn-primary" onclick="createAudienceSummary()">Create My AI-Ready Summary</button>
       <button class="btn btn-yellow" onclick="copyAudienceSummary()">Copy Summary for AI</button>
+      <button class="btn btn-green" onclick="saveAudiencePdf()">&#128196; Save Summary as PDF</button>
       <button class="btn btn-light" onclick="printAudienceForm()">&#128424;&#65039; Print or Save My Answers</button>
       <button class="btn btn-light" onclick="clearAudienceForm()">Start Again</button>
     </div>
@@ -332,12 +351,20 @@
     </div>
   </div>
 
+  <div class="pdf-print-only" id="pdf-print-only">
+    <div class="pdf-print-header">
+      <h1>My Find Your Audience Summary</h1>
+      <p>Generated by the BTechWise Find Your Audience Assessment</p>
+    </div>
+    <div id="pdf-print-content"></div>
+  </div>
+
   <div class="how-to">
     <h3>&#128204; How this tool works</h3>
     <ol>
-      <li>React to all 10 guides &mdash; mark exactly 3 as &#128994; Strong Interest, and any others as &#128993; Worth Exploring if you're curious.</li>
-      <li>Tap <strong>Continue</strong> to unlock detailed scoring for just your top 3.</li>
-      <li>Attach the official PDF for each guide (or paste its text) &mdash; this is optional but gives the AI real audience detail instead of just a title. Then score all 10 common questions (1&ndash;10) and tick any reflection statements that resonate.</li>
+      <li>React to all 10 guides &mdash; you can read (or print) the full guide for each one before deciding, then mark 1 to 3 as &#128994; Strong Interest, and any others as &#128993; Worth Exploring if you're curious.</li>
+      <li>Tap <strong>Continue</strong> to unlock detailed scoring for just your favourites.</li>
+      <li>Score all 10 common questions (1&ndash;10) for each guide and tick any reflection statements that resonate &mdash; the full guide content is already built in, so the AI automatically gets real audience detail, not just a title.</li>
       <li>Check <strong>My Results</strong> to see your ranked matches, then optionally unlock any guides you marked Worth Exploring.</li>
       <li>In <strong>My Results</strong>, also attach your Skills Assessment summary &mdash; this is optional but tells the AI about your own skills and strengths, so it can match them against your top audience instead of guessing.</li>
       <li>Click <strong>Create My AI-Ready Summary</strong>, then <strong>Copy Summary for AI</strong> and paste it into ChatGPT, Claude or Gemini for personalised business idea suggestions.</li>
@@ -370,52 +397,52 @@
   ];
 
   var guides = [
-    {n:1, icon:"&#128121;", title:"Active 55+ Opportunity Seekers", tag:"Experience. Time. Purpose.", specific:[
+    {n:1, icon:"&#128121;", title:"Active 55+ Opportunity Seekers", tag:"Experience. Time. Purpose.", fullText:"Meet Your Audience\nCould These Be Your Ideal Audience?\nImagine sitting in a café on a Tuesday morning.\nAt the next table are David and Susan. They are both in their sixties. Their children have\ngrown up and left home. Retirement has given them something they never had before...\nTime.\nNot endless time—but enough time to begin asking a new question.\n“What do we do now?”\nThey don’t want to spend every day watching television.\nThey don’t want a stressful full-time business.\nThey certainly don’t want somebody shouting that they can become millionaires by next\nTuesday.\nInstead...\nThey want to stay mentally active.\nThey enjoy learning.\nThey like solving problems.\nThey would welcome a little extra income for holidays, hobbies or helping the\ngrandchildren.\nMore than anything...\nThey want to feel that they are still useful.\nThey Are Looking For Someone They Can Trust\nThis audience isn’t impressed by hype.\nThey respond to calm explanations.\nClear steps.\nFriendly guidance.\nSomeone who understands that technology can sometimes feel confusing—but who\nnever makes them feel foolish.\nThat is exactly the environment your newsletter creates.\nQuick Snapshot\nAge: Usually 55–75+\nExperience: A lifetime of skills and knowledge.\nTechnology: Comfortable with email, web browsing and online shopping. Happy to learn\nmore if someone explains it simply.\nBig Goal: Stay active, keep learning, and earn some extra income without unnecessary\nstress.\n\nWhat Problems Are They Trying To Solve?\nMost people think this audience wants money.\nMoney certainly helps...\n...but that isn’t usually their biggest motivation.\nMore often they’re trying to solve one of these problems.\n✔ I don’t want retirement to become boring.\nMany miss the challenge that work used to provide.\n✔ I still have plenty to offer.\nThey know they have decades of experience.\nThey simply don’t know how to turn it into something useful online.\n✔ Technology seems to move so fast.\nArtificial Intelligence.\nWebsites.\nOnline courses.\nDigital products.\nIt can feel like everyone else received the instruction manual.\n✔ I’d like some extra income...\n...without another stressful job.\nAn extra few hundred pounds each month could transform holidays, home improvements\nor simply provide peace of mind.\nWhy Many Publishers Love Working With This Audience\nUnlike many younger audiences...\nThey usually:\n✔ appreciate good teaching\n✔ read newsletters\n✔ complete courses\n✔ value honesty\n✔ become loyal subscribers\n✔ recommend people they trust.\nThey’re patient.\nThey’re grateful.\nAnd when they find someone who genuinely helps them...\nThey often stay for years.\n\nWould You Enjoy Helping These People?\nBefore choosing any audience, ask yourself these simple questions.\nCan you imagine answering questions like...\n□ “Can you explain that one more time?”\n□ “Which button do I press?”\n□ “Is there an easier way?”\nWould you enjoy encouraging someone who has lost confidence?\nWould you enjoy helping someone publish their very first digital product?\nIf your answer is mostly yes, then this could be an excellent audience for you.\nBusiness Ideas That Work Particularly Well\nPeople serving this audience often succeed with:\n• Simple newsletters\n• Easy online courses\n• Printable guides\n• AI made simple\n• Money-saving advice\n• Health and wellbeing information\n• Hobby communities\n• Travel ideas\n• Family history and genealogy\n• Retirement lifestyle resources\nAudience Match\nIf you answered yes to most of these questions...\n✔ You enjoy teaching.\n✔ You like encouraging beginners.\n✔ You have patience.\n✔ You enjoy explaining things simply.\nThen you’ve probably found an audience you’ll enjoy serving.", specific:[
       "I understand the opportunities and concerns people face after 55.",
       "I would enjoy helping people gain confidence with technology or online income.",
       "I can relate to people beginning a new chapter in life."
     ]},
-    {n:2, icon:"&#128106;", title:"Busy Parents", tag:"Flexibility. Family. Future.", specific:[
+    {n:2, icon:"&#128106;", title:"Busy Parents", tag:"Flexibility. Family. Future.", fullText:"Meet Your Audience\nCould These Be Your Ideal Audience?\nImagine it’s half past eight on a Monday morning.\nBreakfast has only just finished.\nOne child is getting ready for school.\nAnother is searching for a missing shoe.\nThe washing machine is already running.\nSomewhere between making packed lunches, answering emails and tidying the kitchen...\na thought keeps returning.\n“Surely there’s a better way than this.”\nThis audience isn’t afraid of hard work.\nThey’re already working incredibly hard.\nThey’re simply looking for a way to build something that fits around family life instead of\ncompeting with it.\nThey Want Flexibility More Than Freedom\nMany parents aren’t dreaming of becoming millionaires.\nThey’re dreaming of choosing when they work.\nBeing there for school plays.\nNot missing birthdays.\nHaving the freedom to stop working when their children need them.\nFor them...\nTime is often more valuable than money.\nQuick Snapshot\nAge: Usually late 20s to mid-40s.\nFamily: Parents with young children or teenagers still living at home.\nTechnology: Comfortable with computers, smartphones, apps and social media.\nBig Goal: Create an income that fits around family life while building a better future.\n\nWhat Problems Are They Trying To Solve?\nMost people think this audience simply wants to earn more\nmoney.\nMoney certainly helps...\n...but that’s only part of the story.\nMore often they’re trying to solve problems like these.\n✔ I never seem to have enough hours.\nBetween work, school runs and family commitments, finding time to build a business\nfeels almost impossible.\n✔ I want more flexibility.\nMany are tired of asking employers for time off or trying to squeeze family life around\nfixed working hours.\n✔ I need extra income.\nRising household costs mean many families are looking for additional income without\ntaking on a second full-time job.\n✔ I don’t know where to start.\nThe internet is full of opportunities, but choosing the right one can feel overwhelming.\nWhy Many Publishers Love Working With This Audience\nBusy parents are highly motivated.\nThey appreciate practical advice that saves time.\nThey enjoy clear, step-by-step guidance.\nWhen they discover something that genuinely helps, they often become loyal readers and\nenthusiastic supporters.\nAbove all...\nthey value solutions that make family life easier.\n\nWould You Enjoy Helping These People?\nBefore choosing any audience, ask yourself these simple\nquestions.\nCan you imagine answering questions like...\n□ “Can I do this in just a few hours each week?”\n□ “Will I need lots of technical knowledge?”\n□ “How do I fit this around my family?”\nWould you enjoy helping busy parents create an income without sacrificing the moments\nthat matter most?\nIf your answer is mostly yes, then this could be an excellent audience for you.\nBusiness Ideas That Work Particularly Well\nPeople serving this audience often succeed with:\n• Family budgeting newsletters\n• Printable planners\n• Meal planning guides\n• Children’s educational activities\n• AI time-saving tutorials\n• Home organisation resources\n• Parenting newsletters\n• Digital family planners\n• Educational printables\n• Beginner-friendly online courses\nAudience Match\nIf you answered yes to most of these questions...\n✔ You enjoy encouraging busy people.\n✔ You understand the pressures of family life.\n✔ You like simplifying complicated ideas.\n✔ You believe business should support family life—not replace it.\nThen you’ve probably found an audience you’ll genuinely enjoy serving.", specific:[
       "I enjoy finding ways to save busy families time.",
       "I understand the balance between family and work.",
       "I would enjoy creating practical resources parents can use immediately."
     ]},
-    {n:3, icon:"&#128295;", title:"Independent Professionals &amp; Tradespeople", tag:"Skilled. Self-reliant. Always solving problems.", specific:[
+    {n:3, icon:"&#128295;", title:"Independent Professionals &amp; Tradespeople", tag:"Skilled. Self-reliant. Always solving problems.", fullText:"Meet Your Audience\nCould These Be Your Ideal Audience?\nImagine arriving home after a long day’s work.\nThe tools have been put away.\nThe van is parked outside.\nYou’ve solved problems for customers all day.\nAs you sit down with a cup of tea, another thought crosses your mind.\n“Surely I could build something that’s mine.”\nThis audience is full of capable people.\nElectricians.\nPlumbers.\nCarpenters.\nGardeners.\nMechanics.\nEngineers.\nConsultants.\nFreelancers.\nThey’ve spent years building valuable skills.\nNow they’re beginning to wonder whether those same skills could create an income that\ndoesn’t always depend on exchanging time for money.\nThey Already Have Valuable Experience\nUnlike complete beginners, these people don’t need to discover what they’re good at.\nThey already know.\nWhat they need is a way to package their knowledge into something that can continue\nearning long after the day’s work is finished.\nQuick Snapshot\nAge: Usually 30 to 65.\nExperience: Skilled professionals, tradespeople or experienced freelancers.\nTechnology: Comfortable with smartphones, email and everyday business software,\nalthough not necessarily confident with online marketing.\nBig Goal: Turn years of practical experience into additional income and greater freedom.\n\nWhat Problems Are They Trying To Solve?\nMost people think this audience simply wants more customers.\nSometimes that’s true...\n...but many are looking for something much bigger.\nMore often they’re trying to solve problems like these.\n✔ I only earn when I’m working.\nIf they stop working...\nthe income usually stops too.\n✔ My experience should be worth more.\nYears of knowledge have real value.\nMany simply don’t know how to package that knowledge into digital products or online\nservices.\n✔ My body won’t do this forever.\nTrades can be physically demanding.\nMany begin looking for ways to earn that rely more on experience than physical effort.\n✔ I don’t understand online business.\nThey know their trade inside out.\nBuilding websites, newsletters or digital products is often unfamiliar territory.\nWhy Many Publishers Love Working With This Audience\nIndependent professionals are practical people.\nThey appreciate honest advice.\nThey value straightforward explanations.\nThey enjoy solutions that save time and produce real results.\nOnce they trust you...\nthey’re usually loyal customers who appreciate quality over hype.\n\nWould You Enjoy Helping These People?\nBefore choosing any audience, ask yourself these simple\nquestions.\nCan you imagine answering questions like...\n□ “How can I turn my skills into a digital product?”\n□ “Can I create income without working longer hours?”\n□ “Where do I even begin online?”\nWould you enjoy helping experienced people discover new ways to share and earn from\nthe knowledge they’ve spent years developing?\nIf your answer is mostly yes, then this could be an excellent audience for you.\nBusiness Ideas That Work Particularly Well\nPeople serving this audience often succeed with:\n• Trade tips newsletters\n• DIY and home maintenance guides\n• Professional checklists\n• Video tutorials\n• Printable work planners\n• Digital templates\n• Safety guides\n• Business forms and documents\n• Online training courses\n• AI tools for small businesses\nAudience Match\nIf you answered Yes to most of these questions...\n✔ You respect practical skills.\n✔ You enjoy teaching from real experience.\n✔ You like solving everyday problems.\n✔ You believe valuable knowledge should continue earning for years to come.\nThen you’ve probably found an audience you’ll genuinely enjoy serving.", specific:[
       "I appreciate practical, no-nonsense advice.",
       "I enjoy solving real-world problems.",
       "I could create resources that save professionals time or money."
     ]},
-    {n:4, icon:"&#127912;", title:"Creative Makers &amp; Hobby Businesses", tag:"Turn your passion into a purposeful income.", specific:[
+    {n:4, icon:"&#127912;", title:"Creative Makers &amp; Hobby Businesses", tag:"Turn your passion into a purposeful income.", fullText:"Meet Your Audience\nCould These Be Your Ideal Audience?\nImagine spending an evening doing something you genuinely enjoy.\nPerhaps you’re painting.\nMaking jewellery.\nRestoring furniture.\nKnitting.\nWoodturning.\nPhotography.\nPottery.\nOr creating beautiful handmade gifts.\nFriends often say,\n“You should sell these!”\nYou’ve smiled politely...\nbut part of you has wondered if they might be right.\nThis audience is full of talented people who already have a hobby they love.\nNow they’re beginning to ask one simple question.\n“Could my passion become a small business?”\nThey Already Love What They Do\nUnlike many new business owners, these people don’t need to discover an interest.\nThey already have one.\nWhat they need is guidance on turning that creativity into something that people are\nhappy to buy.\nQuick Snapshot\nAge: Usually 30 to 70.\nExperience: Creative hobbyists, makers, artists and craftspeople.\nTechnology: Comfortable using the internet but often new to selling online.\nBig Goal: Turn a hobby into an enjoyable source of extra income.\n\nWhat Problems Are They Trying To Solve?\nMost people think this audience only wants to sell more\nproducts.\nSometimes that’s true...\n...but their biggest challenge is often confidence.\nMore often they’re trying to solve problems like these.\n✔ Will anyone actually buy my work?\nMany talented people underestimate the value of their creations.\n✔ I don’t know how to sell online.\nCreating comes naturally.\nMarketing doesn’t.\n✔ Pricing is difficult.\nThey worry about charging too much...\nor too little.\n✔ I want to enjoy my hobby—not turn it into another job.\nMost aren’t looking to build a huge company.\nThey simply want to earn from something they already love doing.\nWhy Many Publishers Love Working With This Audience\nCreative people enjoy learning.\nThey’re always looking for new ideas and inspiration.\nThey appreciate practical guidance that’s easy to follow.\nMost importantly...\nthey genuinely enjoy creating something that makes other people smile.\n\nWould You Enjoy Helping These People?\nBefore choosing any audience, ask yourself these simple\nquestions.\nCan you imagine answering questions like...\n□ “Where should I sell my creations?”\n□ “How much should I charge?”\n□ “Can I start small?”\nWould you enjoy helping creative people gain the confidence to turn their passion into an\nincome?\nIf your answer is mostly yes, then this could be an excellent audience for you.\nBusiness Ideas That Work Particularly Well\nPeople serving this audience often succeed with:\n• Craft newsletters\n• Painting tutorials\n• Printable craft planners\n• Handmade business guides\n• Etsy selling advice\n• Photography tips\n• Digital art resources\n• Hobby communities\n• Creative online courses\n• AI tools for makers\nAudience Match\nIf you answered Yes to most of these questions...\n✔ You enjoy encouraging creative people.\n✔ You appreciate handmade quality.\n✔ You like helping people build confidence.\n✔ You believe hobbies can become rewarding businesses.\nThen you’ve probably found an audience you’ll genuinely enjoy serving.", specific:[
       "I enjoy creativity and making things.",
       "I would enjoy helping people turn hobbies into income.",
       "I understand the satisfaction of creating something unique."
     ]},
-    {n:5, icon:"&#128188;", title:"Experienced Professionals Seeking Change", tag:"A fresh start, built on real experience.", specific:[
+    {n:5, icon:"&#128188;", title:"Experienced Professionals Seeking Change", tag:"A fresh start, built on real experience.", fullText:"Meet Your Audience\nCould These Be Your Ideal Audience?\nImagine sitting at your desk on a normal Tuesday morning.\nThe work isn’t difficult.\nYou’ve been doing it for years.\nThe meetings are familiar.\nThe routine is predictable.\nThen a thought quietly appears.\n“Is this really what I want to be doing for the next ten years?”\nThis audience isn’t looking for an escape.\nThey’re looking for a new direction.\nThey’ve built successful careers.\nThey’ve gained valuable experience.\nNow they’re wondering how that experience could open the door to something more\nmeaningful.\nThey Already Have Years of Knowledge\nThese people have solved problems.\nLed projects.\nManaged teams.\nBuilt relationships.\nMade difficult decisions.\nTheir challenge isn’t finding valuable skills.\nIt’s recognising that those same skills can be used in completely different ways.\nQuick Snapshot\nAge: Usually 40 to 60.\nExperience: Established professionals with years of business or management experience.\nTechnology: Comfortable using modern business technology and eager to learn new\nskills.\nBig Goal: Build a more fulfilling future using the experience they’ve already earned.\n\nWhat Problems Are They Trying To Solve?\nMany people think this audience simply wants a career\nchange.\nSometimes that’s true...\n...but most are searching for something deeper.\nMore often they’re trying to solve problems like these.\n✔ I’ve lost my enthusiasm.\nThe work still pays the bills...\nbut it no longer excites them.\n✔ I want greater control over my future.\nMany don’t want to depend entirely on one employer for the next stage of their lives.\n✔ I know I have more to offer.\nYears of experience have created valuable knowledge.\nThey simply haven’t considered turning it into a business.\n✔ Where do I start?\nChanging direction feels exciting...\nbut also uncertain.\nWhy Many Publishers Love Working With This Audience\nExperienced professionals are thoughtful learners.\nThey ask good questions.\nThey value practical advice over hype.\nWhen they decide to do something...\nthey usually commit themselves fully.\nAbove all...\nthey appreciate guidance from someone they trust.\n\nWould You Enjoy Helping These People?\nBefore choosing any audience, ask yourself these simple\nquestions.\nCan you imagine answering questions like...\n□ “How do I turn my experience into something new?”\n□ “Can I build this alongside my current career?”\n□ “What if I don’t want to retire—I just want a change?”\nWould you enjoy helping experienced professionals discover a new direction that brings\nboth purpose and income?\nIf your answer is mostly yes, then this could be an excellent audience for you.\nBusiness Ideas That Work Particularly Well\nPeople serving this audience often succeed with:\n• Career transition newsletters\n• Leadership guides\n• Mentoring programmes\n• Professional coaching\n• Online business courses\n• AI for professionals\n• Digital knowledge products\n• Productivity resources\n• Business planning tools\n• Personal development communities\nAudience Match\nIf you answered yes to most of these questions...\n✔ You enjoy encouraging experienced people.\n✔ You believe it’s never too late to change direction.\n✔ You like helping others recognise the value of their experience.\n✔ You believe fulfilment is just as important as income.\nThen you’ve probably found an audience you’ll genuinely enjoy serving.", specific:[
       "I understand the desire for a fresh start.",
       "I enjoy helping people use their experience in new ways.",
       "I can encourage others to see new possibilities."
     ]},
-    {n:6, icon:"&#127891;", title:"Knowledge Sharers &amp; Teachers", tag:"Turning knowledge into something others can use.", specific:[
+    {n:6, icon:"&#127891;", title:"Knowledge Sharers &amp; Teachers", tag:"Turning knowledge into something others can use.", fullText:"Meet Your Audience\nCould These Be Your Ideal Audience?\nImagine someone saying to you,\n“You explain that so clearly.”\nPerhaps it happens at work.\nIn a community group.\nWhile helping a friend.\nOr when showing a family member how to do something they’ve struggled with for\nweeks.\nYou may think nothing of it.\nBut this audience notices something important.\nThey enjoy helping people understand.\nThey like turning confusion into clarity.\nThey often know far more than they realise.\nNow they’re beginning to ask,\n“Could I turn what I know into something that helps others—and earns an income too?”\nThey Already Know How To Help\nThese people may be teachers, trainers, coaches, tutors, mentors or simply experienced\nindividuals who are good at explaining things.\nTheir challenge isn’t a lack of knowledge.\nIt’s learning how to organise that knowledge into something other people can use.\nQuick Snapshot\nAge: Usually 30 to 70.\nExperience: Teachers, trainers, coaches, tutors and knowledgeable specialists.\nTechnology: Comfortable with everyday digital tools but may be new to creating online\ncourses or digital products.\nBig Goal: Share useful knowledge in a way that helps others and creates additional\nincome.\n\nWhat Problems Are They Trying To Solve?\nMost people think this audience simply wants to teach online.\nSometimes that’s true...\n...but many are really trying to find a better way to use what they already know.\nMore often they’re trying to solve problems like these.\n✔ I know a lot—but I don’t know how to organise it.\nYears of knowledge can feel too broad or complicated to turn into one clear offer.\n✔ Would anyone pay to learn this from me?\nMany underestimate how valuable simple, practical guidance can be.\n✔ I don’t want complicated technology.\nThey may enjoy teaching but feel less confident about platforms, recording tools or online\ndelivery.\n✔ I want to help more people without repeating myself endlessly.\nA course, guide or newsletter can allow one explanation to help many people.\nWhy Many Publishers Love Working With This Audience\nKnowledge sharers are generous people.\nThey enjoy seeing others make progress.\nThey value clear explanations and practical examples.\nThey often become loyal readers because they appreciate learning from someone who\nteaches with patience and respect.\nAbove all...\nthey understand that good teaching can change confidence as well as results.\n\nWould You Enjoy Helping These People?\nBefore choosing any audience, ask yourself these simple\nquestions.\nCan you imagine answering questions like...\n□ “How do I turn what I know into a simple course?”\n□ “What should I teach first?”\n□ “Do I need to be an expert in technology?”\nWould you enjoy helping knowledgeable people organise their experience and share it\nwith confidence?\nIf your answer is mostly yes, then this could be an excellent audience for you.\nBusiness Ideas That Work Particularly Well\nPeople serving this audience often succeed with:\n• Online teaching guides\n• Course-planning templates\n• Tutor newsletters\n• Coaching resources\n• Printable lesson planners\n• Video teaching tutorials\n• Membership communities\n• Workshop materials\n• Digital workbooks\n• AI tools for teachers and trainers\nAudience Match\nIf you answered Yes to most of these questions...\n✔ You enjoy helping people explain things clearly.\n✔ You respect knowledge gained through experience.\n✔ You like turning complicated ideas into simple steps.\n✔ You believe useful knowledge should be shared—not left sitting in someone’s head.\nThen you’ve probably found an audience you’ll genuinely enjoy serving.", specific:[
       "I enjoy teaching and explaining ideas.",
       "Helping others learn gives me satisfaction.",
       "I would enjoy turning knowledge into practical resources."
     ]},
-    {n:7, icon:"&#128170;", title:"Women Ready for a New Chapter", tag:"Confidence. Community. A fresh beginning.", specific:[
+    {n:7, icon:"&#128170;", title:"Women Ready for a New Chapter", tag:"Confidence. Community. A fresh beginning.", fullText:"Meet Your Audience\nCould These Be Your Ideal Audience?\nImagine standing at the beginning of a new chapter in your life.\nThe children have grown up.\nYour career has changed.\nPerhaps you’ve taken time away from work to care for others.\nOr maybe you’ve simply reached the point where you’re ready to do something for\nyourself.\nA quiet thought keeps returning.\n“I know I can do more than this.”\nThis audience isn’t trying to prove anything to anyone else.\nThey’re ready to rediscover their own confidence.\nThey’ve gained years of life experience.\nNow they’re looking for an opportunity that’s built around who they are today—not who\nthey were twenty years ago.\nThey Bring More Than Experience\nThese women have organised families.\nSolved problems.\nSupported friends.\nManaged homes.\nLed teams.\nBuilt careers.\nTheir greatest strength isn’t simply what they’ve done.\nIt’s the confidence they’ve earned through life.\nQuick Snapshot\nAge: Usually 40 to 65.\nExperience: Women with valuable life, family or career experience looking for a fresh\nopportunity.\nTechnology: Comfortable with everyday technology and keen to learn new digital skills.\nBig Goal: Build an enjoyable business that offers purpose, flexibility and personal\nfulfilment.\n\nWhat Problems Are They Trying To Solve?\nMany people think this audience simply wants to earn extra\nincome.\nSometimes that’s true...\n...but their biggest motivation is often much more personal.\nMore often they’re trying to solve problems like these.\n✔ I’ve spent years helping everyone else.\nNow they’re ready to invest some time in themselves.\n✔ I want work that feels meaningful.\nThey’re looking for something that reflects their values and experience.\n✔ My confidence needs rebuilding.\nAfter career breaks or life changes, many underestimate just how much they have to offer.\n✔ I don’t know where to begin.\nThe online world offers endless possibilities, but choosing the right path can feel\noverwhelming.\nWhy Many Publishers Love Working With This Audience\nThese women are thoughtful learners.\nThey enjoy practical guidance.\nThey appreciate encouragement rather than pressure.\nOnce they discover something that genuinely helps them, they often become loyal\nreaders and enthusiastic supporters.\nAbove all...\nthey’re looking for someone who believes in them until they believe in themselves.\n\nWould You Enjoy Helping These People?\nBefore choosing any audience, ask yourself these simple\nquestions.\nCan you imagine answering questions like...\n□ “Where do I begin?”\n□ “Can I really do this at my age?”\n□ “How do I build my confidence again?”\nWould you enjoy helping women discover that their experience, knowledge and\ndetermination can become the foundation of a rewarding business?\nIf your answer is mostly yes, then this could be an excellent audience for you.\nBusiness Ideas That Work Particularly Well\nPeople serving this audience often succeed with:\n• Confidence-building newsletters\n• Personal development guides\n• Women’s support communities\n• Career transition resources\n• Health and wellbeing newsletters\n• Coaching and mentoring programmes\n• Online workshops\n• Lifestyle blogs\n• AI made simple for beginners\n• Digital planning tools\nAudience Match\nIf you answered Yes to most of these questions...\n✔ You enjoy encouraging people to believe in themselves.\n✔ You respect life experience as much as qualifications.\n✔ You like helping others discover new opportunities.\n✔ You believe every new chapter can become someone’s best chapter.\nThen you’ve probably found an audience you’ll genuinely enjoy serving.", specific:[
       "I understand the confidence needed to begin again.",
       "I would enjoy encouraging women to build something of their own.",
       "I value supportive communities and personal growth."
     ]},
-    {n:8, icon:"&#128640;", title:"The Ambitious Extra Earners", tag:"Building something bigger, one step at a time.", specific:[
+    {n:8, icon:"&#128640;", title:"The Ambitious Extra Earners", tag:"Building something bigger, one step at a time.", fullText:"Meet Your Audience\nCould These Be Your Ideal Audience?\nImagine checking your bank account at the end of the month.\nThe bills are paid.\nLife is comfortable enough.\nBut you know things could be better.\nYou don’t necessarily want to leave your job.\nYou simply want more choices.\nMore financial breathing space.\nMore freedom to enjoy life.\nA thought keeps returning.\n“What if I could build another income alongside what I already do?”\nThis audience isn’t chasing overnight riches.\nThey’re looking for sensible, achievable ways to improve their future.\nThey’re Willing To Put In The Effort\nThese people understand that worthwhile goals take time.\nThey’re prepared to learn.\nPrepared to plan.\nPrepared to build steadily.\nThey’re simply looking for someone to show them the right path.\nQuick Snapshot\nAge: Usually 25 to 55.\nExperience: Employees, professionals and motivated individuals looking to build\nadditional income.\nTechnology: Comfortable using everyday technology and happy to learn new digital skills\nBig Goal: Create a reliable second income that offers greater financial freedom and future\nsecurity.\n\nWhat Problems Are They Trying To Solve?\nMost people think this audience only wants more money.\nMoney is certainly part of the picture...\n...but freedom is usually the real goal.\nMore often they’re trying to solve problems like these.\n✔ My salary only goes so far.\nRising costs mean many people are looking for additional income without changing\ncareers.\n✔ I want more choices.\nExtra income can provide opportunities for travel, hobbies, family or an earlier retirement.\n✔ I don’t want to gamble.\nThey’re looking for realistic opportunities—not risky schemes or unrealistic promises.\n✔ I don’t know which business idea to choose.\nWith so many possibilities online, knowing where to begin is often the biggest challenge.\nWhy Many Publishers Love Working With This Audience\nThese people are motivated.\nThey enjoy setting goals and measuring progress.\nThey appreciate practical advice that produces real results.\nMost importantly...\nthey’re prepared to take small, consistent steps towards a bigger future.\n\nWould You Enjoy Helping These People?\nBefore choosing any audience, ask yourself these simple\nquestions.\nCan you imagine answering questions like...\n□ “Which online business is the best place to start?”\n□ “How much time do I need each week?”\n□ “How long before I begin seeing results?”\nWould you enjoy helping determined people build an extra income that gives them more\nchoices and greater financial confidence?\nIf your answer is mostly yes, then this could be an excellent audience for you.\nBusiness Ideas That Work Particularly Well\nPeople serving this audience often succeed with:\n• Personal finance newsletters\n• Side-income planning guides\n• Digital business courses\n• AI productivity resources\n• Investment education (non-financial advice)\n• Goal-setting journals\n• Budgeting templates\n• Digital planners\n• Business coaching\n• Online accountability communities\nAudience Match\nIf you answered Yes to most of these questions...\n✔ You enjoy helping people achieve long-term goals.\n✔ You believe success comes from consistent action.\n✔ You like encouraging practical decision-making.\n✔ You believe financial freedom begins with small, steady steps.\nThen you’ve probably found an audience you’ll genuinely enjoy serving.", specific:[
       "I enjoy setting goals and achieving them.",
       "I like building projects alongside existing commitments.",
       "I would enjoy creating products that help people increase their income."
     ]},
-    {n:9, icon:"&#129309;", title:"Stronger Together", tag:"Community and collaboration.", specific:[
+    {n:9, icon:"&#129309;", title:"Stronger Together", tag:"Community and collaboration.", fullText:"Meet Your Audience\nCould These Be Your Ideal Audience?\nImagine finishing a day spent helping someone else.\nPerhaps you’ve been volunteering.\nSupporting a local group.\nHelping a neighbour.\nOrganising a charity event.\nOr simply being the person everyone turns to when they need advice.\nYou don’t do it for recognition.\nYou do it because making a difference matters.\nThen a thought quietly appears.\n“Could I build a business that helps people and earns an income?”\nThis audience believes success isn’t measured only by money.\nIt’s measured by the difference they make in other people’s lives.\nThey Naturally Put People First\nThese people are listeners.\nEncouragers.\nOrganisers.\nCommunity builders.\nThey’re happiest when they’re solving problems that improve someone else’s life.\nTheir challenge isn’t finding compassion.\nIt’s recognising that compassion can become the foundation of a meaningful business.\nQuick Snapshot\nAge: Usually 35 to 70.\nExperience: Volunteers, carers, community leaders and people who naturally enjoy\nhelping others.\nTechnology: Comfortable using everyday technology and willing to learn simple online\ntools.\nBig Goal: Build a business that combines purpose, impact and a sustainable income.\n\nWhat Problems Are They Trying To Solve?\nMany people think this audience only wants to “do good.”\nThat’s certainly important...\n...but they also want to create something sustainable.\nMore often they’re trying to solve problems like these.\n✔ I want my work to have meaning.\nThey’d rather make a positive difference than simply earn another pay cheque.\n✔ Helping people doesn’t always pay the bills.\nMany have valuable experience supporting others but have never considered turning that\ninto a business.\n✔ I don’t want to become pushy or sales-focused.\nThey worry that running a business means putting profit before people.\n✔ Where do I begin?\nThey’re looking for a simple path that allows them to serve others while creating a\nreliable income.\nWhy Many Publishers Love Working With This Audience\nThese people build relationships.\nThey care deeply about trust.\nThey appreciate honesty and authenticity.\nThey’re often wonderful members of communities because they enjoy encouraging others\nto succeed.\nAbove all...\nthey believe that businesses can improve lives as well as earn money.\n\nWould You Enjoy Helping These People?\nBefore choosing any audience, ask yourself these simple\nquestions.\nCan you imagine answering questions like...\n□ “How can I help people and still earn a living?”\n□ “Can kindness really become a business?”\n□ “How do I build trust online?”\nWould you enjoy helping caring people create businesses that genuinely improve other\npeople’s lives?\nIf your answer is mostly yes, then this could be an excellent audience for you.\nBusiness Ideas That Work Particularly Well\nPeople serving this audience often succeed with:\n• Community newsletters\n• Wellbeing resources\n• Support group memberships\n• Coaching and mentoring\n• Charity fundraising guides\n• Volunteer training materials\n• Family support resources\n• Community directories\n• Personal development workshops\n• AI tools for community organisations\nAudience Match\nIf you answered Yes to most of these questions...\n✔ You enjoy encouraging and supporting others.\n✔ You believe trust is more valuable than hype.\n✔ You like building genuine relationships.\n✔ You believe successful businesses can make communities stronger.\nThen you’ve probably found an audience you’ll genuinely enjoy serving.", specific:[
       "I enjoy bringing people together.",
       "Helping communities succeed motivates me.",
       "I believe collaboration often produces better results."
     ]},
-    {n:10, icon:"&#127968;", title:"Home-Based Opportunity Seekers", tag:"Flexible ways of earning, right from home.", specific:[
+    {n:10, icon:"&#127968;", title:"Home-Based Opportunity Seekers", tag:"Flexible ways of earning, right from home.", fullText:"Meet Your Audience\nCould These Be Your Ideal Audience?\nImagine sitting at your kitchen table with a cup of tea.\nThe laptop is open.\nThe house is quiet.\nPerhaps you’re working around family life.\nPerhaps you’ve retired.\nPerhaps you’re looking for a fresh start.\nWhatever your reason, one thought keeps returning.\n“Could I really build something from home?”\nThis audience is made up of ordinary people with an extraordinary willingness to try.\nThey aren’t looking for fame.\nThey aren’t chasing overnight success.\nThey’re simply looking for an opportunity that begins where they already are.\nHome Is Their Starting Point\nFor these people, working from home isn’t a compromise.\nIt’s a choice.\nNo commuting.\nGreater flexibility.\nMore control over their day.\nThe challenge isn’t finding somewhere to work.\nIt’s deciding what to build.\nQuick Snapshot\nAge: Any adult age.\nExperience: People from every background looking for a practical home-based\nopportunity.\nTechnology: Comfortable with everyday computers, tablets and smartphones.\nBig Goal: Build a flexible income from home that fits around their lifestyle.\n\nWhat Problems Are They Trying To Solve?\nMany people think this audience simply wants to work from\nhome.\nThat’s true...\n...but what they really want is greater control over their future.\nMore often they’re trying to solve problems like these.\n✔ I want more flexibility.\nThey want work that fits around life—not life that fits around work.\n✔ I don’t know which opportunity is genuine.\nThe internet is full of promises, making it difficult to know where to begin.\n✔ Can I really do this from home?\nMany lack confidence, even though they already have the skills needed to get started.\n✔ I want to build something that’s mine.\nInstead of depending entirely on one employer, they’re looking for a business they can\ngradually develop over time.\nWhy Many Publishers Love Working With This Audience\nHome-based entrepreneurs are curious.\nThey enjoy learning.\nThey appreciate simple, practical guidance.\nMost importantly...\nthey’re looking for realistic advice from someone who’s genuinely interested in helping\nthem succeed.\n\nWould You Enjoy Helping These People?\nBefore choosing any audience, ask yourself these simple\nquestions.\nCan you imagine answering questions like...\n□ “Which home business is right for me?”\n□ “Can I start with just a few hours each week?”\n□ “What equipment do I really need?”\nWould you enjoy helping ordinary people discover that they can build a rewarding\nbusiness without leaving home?\nIf your answer is mostly yes, then this could be an excellent audience for you.\nBusiness Ideas That Work Particularly Well\nPeople serving this audience often succeed with:\n• Home business newsletters\n• AI for beginners\n• Printable business planners\n• Digital products\n• Blogging and newsletters\n• Online courses\n• Virtual assistance\n• Freelancing guides\n• Productivity resources\n• Home office organisation\nAudience Match\nIf you answered yes to most of these questions...\n✔ You enjoy encouraging beginners.\n✔ You believe opportunities should be accessible to everyone.\n✔ You like simplifying the journey into online business.\n✔ You believe great businesses can begin at an ordinary kitchen table.\nThen you’ve probably found an audience you’ll genuinely enjoy serving.", specific:[
       "I enjoy working from home.",
       "I appreciate flexible ways of earning an income.",
       "I could create resources that help others succeed from home."
@@ -435,6 +462,10 @@
   function activeGuides(){ return unlocked.concat(extraAdded); }
 
   /* ---------- STEP 1: Reaction / Selection grid ---------- */
+  function escapeHtml(s){
+    return (s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
   function buildReactionGrid(){
     var grid = document.getElementById("reaction-grid");
     var html = "";
@@ -446,9 +477,55 @@
       html += '    <button type="button" class="rc-btn excites-btn" id="excites-btn-' + g.n + '" onclick="setReaction(' + g.n + ',\'excites\')">&#128994; Strong Interest</button>';
       html += '    <button type="button" class="rc-btn maybe-btn" id="maybe-btn-' + g.n + '" onclick="setReaction(' + g.n + ',\'maybe\')">&#128993; Worth Exploring</button>';
       html += '  </div>';
+      if (g.fullText){
+        html += '  <div class="rc-read-row">';
+        html += '    <button type="button" class="rc-read-toggle" id="read-btn-' + g.n + '" onclick="toggleGuideRead(' + g.n + ')">&#128214; Read the full guide before deciding</button>';
+        html += '    <button type="button" class="rc-print-btn" onclick="printGuide(' + g.n + ')">&#128424;&#65039; Print this guide</button>';
+        html += '  </div>';
+        html += '  <div class="rc-read-body" id="read-body-' + g.n + '" style="display:none;">' + escapeHtml(g.fullText) + '</div>';
+      }
       html += '</div>';
     });
     grid.innerHTML = html;
+  }
+
+  function toggleGuideRead(n){
+    var body = document.getElementById("read-body-" + n);
+    var btn = document.getElementById("read-btn-" + n);
+    if (!body || !btn) return;
+    var isOpen = body.style.display !== "none";
+    body.style.display = isOpen ? "none" : "block";
+    btn.innerHTML = isOpen ? "&#128214; Read the full guide before deciding" : "&#128213; Hide the full guide";
+  }
+
+  function toggleScoreGuideRead(n){
+    var body = document.getElementById("score-read-body-" + n);
+    var btn = document.getElementById("score-read-btn-" + n);
+    if (!body || !btn) return;
+    var isOpen = body.style.display !== "none";
+    body.style.display = isOpen ? "none" : "block";
+    btn.innerHTML = isOpen ? "&#128214; Read the full guide again" : "&#128213; Hide the guide";
+  }
+
+  function printGuide(n){
+    var g = guideByN(n);
+    if (!g || !g.fullText) return;
+    var w = window.open("", "_blank", "width=700,height=800");
+    if (!w){ alert("Please allow pop-ups to print this guide."); return; }
+    var bodyHtml = escapeHtml(g.fullText).replace(/\n/g, "<br>");
+    w.document.write(
+      "<!DOCTYPE html><html><head><title>" + escapeHtml(g.title) + "</title>" +
+      "<style>body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#111;padding:24px;max-width:650px;margin:0 auto;}" +
+      "h1{font-size:20px;color:#0026cf;margin-bottom:4px;}.tag{color:#666;font-style:italic;margin-bottom:20px;}</style>" +
+      "</head><body>" +
+      "<h1>" + escapeHtml(g.title) + "</h1>" +
+      "<div class=\"tag\">" + escapeHtml(g.tag) + "</div>" +
+      "<div>" + bodyHtml + "</div>" +
+      "</body></html>"
+    );
+    w.document.close();
+    w.focus();
+    setTimeout(function(){ w.print(); }, 300);
   }
 
   function countReaction(type){
@@ -488,18 +565,18 @@
     document.getElementById("maybe-counter").textContent = "\ud83d\udfe1 Worth Exploring: " + maCount + " marked";
     var continueBtn = document.getElementById("continue-btn");
     var hint = document.getElementById("continue-hint");
-    if (exCount === 3){
+    if (exCount >= 1){
       continueBtn.disabled = false;
-      hint.textContent = "Great \u2014 you're ready! Tap Continue to score your 3 guides.";
+      hint.textContent = "Great \u2014 you're ready! Tap Continue to score your " + exCount + " guide" + (exCount === 1 ? "" : "s") + ".";
     } else {
       continueBtn.disabled = true;
-      hint.textContent = "Pick exactly 3 guides marked \ud83d\udfe2 Strong Interest to continue (" + exCount + "/3 so far).";
+      hint.textContent = "Pick at least 1 guide marked \ud83d\udfe2 Strong Interest to continue (up to 3).";
     }
   }
 
   function continueToScoring(){
     unlocked = guides.filter(function(g){ return reaction[g.n] === 'excites'; }).map(function(g){ return g.n; });
-    if (unlocked.length !== 3) return;
+    if (unlocked.length < 1) return;
     hasContinued = true;
 
     document.getElementById("selection-section").classList.add("hidden-block");
@@ -542,11 +619,13 @@
     html += '  </div>';
     html += '  <div class="guide-body">';
     html += '<div class="guide-attach">';
-    html += '  <h4>&#128206; Optional: Attach The Official "' + g.title + '" Guide</h4>';
-    html += '  <p>Attaching the actual guide PDF (or pasting its text) helps the AI give richer, audience-specific suggestions instead of generic ones &mdash; this makes a real difference to your results.</p>';
-    html += '  <input type="file" accept="application/pdf" id="file-' + g.n + '" onchange="handleGuideUpload(' + g.n + ', this)">';
-    html += '  <div class="upload-status" id="upload-status-' + g.n + '"></div>';
-    html += '  <textarea class="guide-textarea" id="guidetext-' + g.n + '" placeholder="Guide text will appear here after upload \u2014 or you can paste it yourself."></textarea>';
+    html += '  <h4>&#128214; About The "' + g.title + '" Audience</h4>';
+    html += '  <p>The full guide for this audience is already built into the tool, so the AI automatically gets the richer detail &mdash; nothing to attach here.</p>';
+    html += '  <div class="rc-read-row" style="padding-top:0;">';
+    html += '    <button type="button" class="rc-read-toggle" id="score-read-btn-' + g.n + '" onclick="toggleScoreGuideRead(' + g.n + ')">&#128214; Read the full guide again</button>';
+    html += '    <button type="button" class="rc-print-btn" onclick="printGuide(' + g.n + ')">&#128424;&#65039; Print this guide</button>';
+    html += '  </div>';
+    html += '  <div class="rc-read-body" id="score-read-body-' + g.n + '" style="display:none;">' + escapeHtml(g.fullText || "") + '</div>';
     html += '</div>';
     commonQuestions.forEach(function(q, qi){
       html += '<div class="q-row">';
@@ -580,7 +659,7 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js";
   }
 
-  function extractPdfIntoBox(file, status, box, noun){
+  function extractPdfIntoBox(file, status, box, noun, sanitizer){
     status.classList.remove("warn");
     status.textContent = "Reading PDF\u2026";
 
@@ -606,6 +685,7 @@
         }
         Promise.all(pagePromises).then(function(pages){
           var text = pages.join("\n\n").replace(/[ \t]+/g, " ").trim();
+          if (sanitizer) text = sanitizer(text);
           if (!text){
             status.classList.add("warn");
             status.textContent = "\u26a0\ufe0f Couldn't find readable text in that PDF \u2014 please paste the " + noun + " text into the box below instead.";
@@ -622,20 +702,12 @@
     reader.readAsArrayBuffer(file);
   }
 
-  function handleGuideUpload(n, input){
-    var file = input.files && input.files[0];
-    if (!file) return;
-    var status = document.getElementById("upload-status-" + n);
-    var box = document.getElementById("guidetext-" + n);
-    extractPdfIntoBox(file, status, box, "guide");
-  }
-
   function handleSkillsUpload(input){
     var file = input.files && input.files[0];
     if (!file) return;
     var status = document.getElementById("skills-upload-status");
     var box = document.getElementById("skills-summary-text");
-    extractPdfIntoBox(file, status, box, "skills summary");
+    extractPdfIntoBox(file, status, box, "skills summary", sanitizeSkillsText);
   }
 
   function buildNavHTML(){
@@ -804,6 +876,23 @@
   /* ---------- AI Summary ---------- */
   var MAX_GUIDE_CHARS = 6000;
 
+  // The Skills Assessment tool's own copy-ready text starts with a greeting line and
+  // ends with its own "please suggest business ideas" prompt (kept there deliberately,
+  // as an emotional-lift moment for people who use that tool on its own). If that full
+  // text gets pasted or uploaded here, we don't want two competing prompts confusing
+  // the AI — so we strip both parts down to just the data block before folding it in.
+  function sanitizeSkillsText(text){
+    if (!text) return text;
+    var cleaned = text;
+    var dividerIdx = cleaned.indexOf("===");
+    if (dividerIdx > -1) cleaned = cleaned.slice(dividerIdx);
+    var closingIdx = cleaned.search(/Based on everything above/i);
+    if (closingIdx > -1){
+      cleaned = cleaned.slice(0, closingIdx).replace(/=+\s*$/, "").trim();
+    }
+    return cleaned.trim();
+  }
+
   function buildAudiencePrompt(){
     var active = activeGuides();
     var results = active.map(function(n){
@@ -817,12 +906,13 @@
     if (completed.length === 0) return null;
     completed.sort(function(a,b){ return (b.total+b.bonus) - (a.total+a.bonus); });
 
-    // Gather any guide text the person has attached or pasted, for guides that were scored
+    // Guide content is built into the tool itself, so it's always available for
+    // every guide that was scored — no upload or attachment needed from the person.
     var attachments = [];
     completed.forEach(function(r){
-      var box = document.getElementById("guidetext-" + r.n);
-      if (box && box.value && box.value.trim().length > 0){
-        var text = box.value.trim();
+      var g = guideByN(r.n);
+      if (g.fullText && g.fullText.trim().length > 0){
+        var text = g.fullText.trim();
         var truncated = text.length > MAX_GUIDE_CHARS;
         if (truncated) text = text.slice(0, MAX_GUIDE_CHARS);
         attachments.push({ title:r.title, text:text, truncated:truncated });
@@ -831,7 +921,7 @@
 
     // My own skills summary (about ME, not about the audience)
     var skillsBox = document.getElementById("skills-summary-text");
-    var skillsText = (skillsBox && skillsBox.value.trim().length > 0) ? skillsBox.value.trim() : null;
+    var skillsText = (skillsBox && skillsBox.value.trim().length > 0) ? sanitizeSkillsText(skillsBox.value.trim()) : null;
     var skillsTruncated = false;
     if (skillsText && skillsText.length > MAX_GUIDE_CHARS){
       skillsText = skillsText.slice(0, MAX_GUIDE_CHARS);
@@ -858,22 +948,27 @@
       });
     }
 
-    prompt += "\n\ud83d\udccc What I'd Like Your Help With\n";
-    if (skillsText && attachments.length > 0){
-      prompt += "Please treat the \"My Skills & Strengths\" section as a profile of ME, and the \"Official Guide Content\" section as a profile of the CUSTOMERS I'd be serving. ";
-      prompt += "Suggest 3-5 realistic online business ideas that sit at the genuine intersection of what I'm good at and what the \"" + completed[0].title + "\" audience actually needs \u2014 please don't just describe the audience back to me, and don't suggest anything that ignores my actual skills. For each idea please give:\n";
-    } else {
-      prompt += "Based on everything above" + (attachments.length > 0 ? " \u2014 including the actual guide content, not just the audience name" : "") + ", please suggest 3-5 realistic online business ideas that would be a genuine good fit for the \"" + completed[0].title + "\" audience and for me. For each idea please give:\n";
-    }
-    prompt += "\u2022 A short heading\n";
-    prompt += "\u2022 Why it suits this audience and could suit me\n";
-    prompt += "\u2022 The realistic cost and effort to get started\n";
-    prompt += "\u2022 What a concrete first step would look like\n";
+    prompt += "\n\ud83d\udccc Final AI Instructions\n";
+    prompt += "Based on everything above:\n\n";
+    if (skillsText) prompt += "\u2022 Treat \"My Skills & Strengths\" as a profile of me.\n";
+    if (attachments.length > 0) prompt += "\u2022 Treat the \"Official Guide Content\" as a profile of the people I want to help.\n";
+    prompt += "\u2022 Before suggesting any business ideas, first analyse my:\n";
+    prompt += "   - skills and experience\n";
+    prompt += "   - personal strengths\n";
+    prompt += "   - interests\n";
+    prompt += "   - preferred way of working\n";
+    prompt += "   - available time\n";
+    prompt += "   - tasks I want to avoid\n";
+    prompt += "\u2022 Then identify the genuine intersection between what I'm good at and what the \"" + completed[0].title + "\" audience genuinely needs.\n";
+    prompt += "\nPlease recommend 3\u20135 realistic online business ideas. For each idea explain:\n\n";
+    prompt += "\u2022 Why it is a strong match for both me and this audience\n";
+    prompt += "\u2022 Why people would genuinely pay for it\n";
+    prompt += "\u2022 How I could start with little or no money\n";
+    prompt += "\u2022 A realistic first step I could take this week\n";
     if (completed.length > 1){
-      prompt += "\nIf my second-highest scoring guide (" + completed[1].title + ") could realistically overlap with my top match, please mention that too.\n";
+      prompt += "\nMy second-highest scoring guide (" + completed[1].title + ") scored almost as highly \u2014 if it genuinely strengthens the recommendation, mention that overlap briefly, but don't let it distract from my highest-scoring audience (" + completed[0].title + ").\n";
     }
-    prompt += "\nBefore giving your final answer, please ask me 2-3 quick clarifying questions about anything still unclear \u2014" + (skillsText ? " for example how much time I realistically have each week \u2014" : " my own skills, interests, or how much time I realistically have each week \u2014") + " then tailor your suggestions using my answers, rather than guessing.\n";
-    prompt += "\nPlease be encouraging but honest \u2014 I want ideas I can actually pursue and enjoy, not just dream about.";
+    prompt += "\nPlease be encouraging but honest. Recommend ideas I could realistically build and enjoy over the next few years, rather than simply following the latest online trend.";
     return prompt;
   }
 
@@ -919,6 +1014,27 @@
     if (!anyAnswered){ alert("Please answer at least one question before printing!"); return; }
     active.forEach(function(n){ document.getElementById("guide-" + n).classList.add("open"); });
     window.print();
+  }
+
+  function saveAudiencePdf(){
+    var output = document.getElementById("audience-summary-output");
+    if (!output.value || output.value.indexOf("will appear here") > -1){
+      var prompt = buildAudiencePrompt();
+      if (!prompt){ alert("Please fully score at least one guide first (all 10 questions)!"); return; }
+      output.value = prompt;
+    }
+    document.getElementById("pdf-print-content").textContent = output.value;
+    var oldTitle = document.title;
+    document.title = "My_Find_Your_Audience_Summary";
+    document.body.classList.add("printing-audience-pdf");
+    function restore(){
+      document.body.classList.remove("printing-audience-pdf");
+      document.title = oldTitle;
+      window.removeEventListener("afterprint", restore);
+    }
+    window.addEventListener("afterprint", restore);
+    window.print();
+    setTimeout(restore, 3000);
   }
 
   function clearAudienceForm(){
